@@ -1,0 +1,143 @@
+﻿@model OzSapkaTShirt.Models.Order
+
+@if (Model == null)
+{
+    <h2>Sepetim</h2>
+    <hr>
+    <p>Sepetiniz boş.</p>
+}
+else
+{
+    <h2>Sepetim</h2>
+    <h2>Sipariş Detayları</h2>
+
+    <div class="row">
+        <div class="col-md-6">
+            <dl class="dl-horizontal">
+                <dt>Tarih:</dt>
+                <dd id="newOrderDate">@Model.OrderDate.ToShortDateString()</dd>
+                <dt>Sipariş Toplam:</dt>
+                <dd id="orderTotalPrice">@Model.TotalPrice.ToString("C2")</dd>
+                <dt>Durum:</dt>
+                <dd>@GetStatusName(Model.Status)</dd>
+            </dl>
+        </div>
+
+    </div>
+
+    <h3>Sipariş Ürünleri</h3>
+    <div id="order-detail-section">
+        @await Html.PartialAsync("OrderDetailPartial",Model.OrderProducts)
+    </div>
+
+
+    <div id="successMessage" class="alert alert-success" style="display: none;"></div>
+    <div class="message-container"></div>
+    <script src="https://kit.fontawesome.com/54ee7b90a1.js" crossorigin="anonymous"></script>
+    <script>
+
+      
+
+        function UpDateBasket(productId, quantity) {
+
+            if (quantity === 0) {
+                if (!confirm("Ürünü sepetten kaldırmak istediğinizden emin misiniz?")) {
+                    return;
+                }
+            } else {
+                $.ajax({
+                    type: "POST",
+                    url: "@Url.Action("UpDateBasket","OrderProducts")/" + productId + "?quantity=" + quantity,
+                    success: function (result) {
+
+                        if(result===null)
+                        {
+                                <h2>Sepetim < /h2>
+                                < hr >
+                                <p>Sepetiniz boş.< /p>
+
+
+                        }
+
+                        if (quantity < 0) {
+                            showMessage("Ürün adedi azaltıldı.", "success");
+
+                        } 
+                        else {
+
+                            showMessage("Ürün adedi artırıldı.", "success");
+                        }
+
+                        $('#orderTotalPrice').html(result.totalPrice);
+                        $('#order-detail-section').html(result);
+                    },
+                    error: function (error) {
+                        showMessage("Ürün güncellenirken bir hata oluştu.", "error");
+                    }
+                });
+              
+            }
+
+           
+      
+        }
+
+
+        function RemoveOrderProduct(productId, quantity) {
+            if (confirm("Ürünü sepetten kaldırmak istediğinizden emin misiniz?")) {
+                UpDateBasket(productId, quantity);
+
+               
+            }
+           
+        }
+
+        function showMessage(message, messageType) {
+            var alertClass = "alert-info";
+            if (messageType === "success") {
+                alertClass = "alert-success";
+            } else if (messageType === "error") {
+                alertClass = "alert-danger";
+            }
+
+            var alertHtml = '<div class="alert ' + alertClass + '">' + message + '</div>';
+            $(".message-container").html(alertHtml).fadeIn(500).fadeOut(500);
+        }
+        function updateCartView(cartData) {
+            // Sepet görüntüsünü güncelle
+            $(".cart-items").html(cartData.itemsCount);
+            $(".cart-total").html(cartData.totalPrice);
+        }
+
+    </script>
+
+    @functions
+    {
+    string GetStatusName(int status)
+    {
+        string statusName = string.Empty;
+        switch (status)
+        {
+            case 0:
+                statusName = "Sepette";
+                break;
+            case 1:
+                statusName = "Sipariş Alındı";
+                break;
+            case 2:
+                statusName = "Hazırlanıyor";
+                break;
+            case 3:
+                statusName = "Kargoya Verildi";
+                break;
+            case 4:
+                statusName = "Tamamlandı";
+                break;
+            default:
+                statusName = "Bilinmeyen Durum";
+                break;
+        }
+        return statusName;
+    }
+    }
+}

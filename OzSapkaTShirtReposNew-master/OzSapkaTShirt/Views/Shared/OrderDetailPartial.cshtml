@@ -1,0 +1,62 @@
+﻿@model Order
+@if(Model==null)
+{
+   
+    <p>Sepetiniz boş.</p>
+}
+@{
+    float orderTotalPrice = 0;
+    if (Model.OrderProducts != null && Model.OrderProducts.Count > 0)
+    {
+        orderTotalPrice = Model.OrderProducts.Sum(q => q.Quantity * q.Price);
+
+    }
+}
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Ürün Adı</th>
+            <th>Ürün Resmi</th>
+            <th>Adet</th>
+            <th>Ürün Fiyat</th>
+            <th>Ürün Adet Toplam</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var orderProduct in Model.OrderProducts)
+        {
+            <tr>
+                <td>@orderProduct.Product?.Name</td>
+                <td><img class="card-img" src="data:image/png;base64,@(Convert.ToBase64String(orderProduct.Product?.ThumbNail))" style="width:50px;display:block" /></td>
+                <td>
+                    <div class="quantity">
+                        @if (orderProduct.Quantity < 2)
+                        {
+
+                            <i style="margin:auto; border:1px solid; " class="fa-solid fa-minus" onclick="RemoveOrderProduct('@orderProduct.ProductId',-1)"></i>
+                        }
+                        else
+                        {
+
+                            <i style="margin:auto; border:1px solid; " class="fa-solid fa-minus" onClick="UpDateBasket('@orderProduct.ProductId', -1)"></i>
+                        }
+                        @orderProduct.Quantity
+                        <i style="margin:auto" class="fa-solid fa-plus" onClick="UpDateBasket('@orderProduct.ProductId', 1)"></i>
+                    </div>
+                </td>
+                <td>@orderProduct.Price.ToString("C2")</td>
+                @{
+                    var urunToplam = orderProduct.Quantity * orderProduct.Price;
+                }
+                <td>@urunToplam.ToString("C2")</td>
+                <td><i class="fa-solid fa-trash" onclick="RemoveOrderProduct('@orderProduct.ProductId','@(orderProduct.Quantity* -1)')"></i></td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<script>
+    $('#orderTotalPrice').html('@orderTotalPrice.ToString("C2")');
+</script>

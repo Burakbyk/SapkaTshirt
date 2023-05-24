@@ -11,10 +11,11 @@ using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using System.ComponentModel.DataAnnotations.Schema;
+using Microsoft.AspNetCore.Identity.UI.V5.Pages.Internal;
 
 namespace OzSapkaTShirt.Controllers
 {
-    public struct ForgetModel
+    public class ForgetModel
     {
        
         [DisplayName("E-posta")]
@@ -23,13 +24,10 @@ namespace OzSapkaTShirt.Controllers
         [EmailAddress(ErrorMessage = "Geçersiz format")]
         public string EMail { get; set; }
 
-       
-
 
     }
-    public struct ResetModel
-    {
-       
+    public class ResetModel
+    {      
         [Required]
         [StringLength(256,MinimumLength =5)]
         [EmailAddress]
@@ -53,9 +51,7 @@ namespace OzSapkaTShirt.Controllers
         [DataType(DataType.Password)]
         [Compare("PassWord", ErrorMessage = "Parola eşleşme başarısız")]
         public string ConfirmPassWord { get; set; }
-
-
-        
+       
 
     }
     public class UsersController : Controller
@@ -73,57 +69,64 @@ namespace OzSapkaTShirt.Controllers
         }
 
 
-
         public IActionResult ResetPassword()
         {
-
-
-            return View(new ResetModel());
-        }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> ResetPassword([Bind("EMail, Code, PassWord, ConfirmPassWord")] ResetModel resetModel)
-        {
-            ApplicationUser applicationUser;
-
-            if (ModelState.IsValid)
-            {
-                applicationUser = await _userManager.FindByEmailAsync(resetModel.EMail);
-
-               await  _userManager.ResetPasswordAsync(applicationUser, resetModel.Code, resetModel.PassWord);
-
-       
-            }
-
 
             return View();
         }
 
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ViewResult ResetPassword([Bind("EMail, Code, PassWord, ConfirmPassWord")] ResetModel resetModel)
+        {
+            ApplicationUser applicationUser;
+            IdentityResult identityResult;
+            
+            if (ModelState.IsValid)
+            {
+                applicationUser =  _userManager.FindByEmailAsync(resetModel.EMail).Result;
+                applicationUser.UserName = applicationUser.UserName.Trim();
+                
 
+               identityResult   =   _userManager.ResetPasswordAsync(applicationUser, resetModel.Code, resetModel.PassWord).Result;
+               
+                if(identityResult.Succeeded)
+                {
+                    return View("Login");
+                }
+                else
+                {
+                    ModelState.AddModelError("Code", "");
+                
+                }
+
+               
+             }
+           
+            return View();
+           
+        }
 
         public IActionResult ForgetPassword()
         {
-
-            return View(new ForgetModel());
+            return View();
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> ForgetPassword([Bind("EMail")] ForgetModel forgetModel)
+        public ViewResult  ForgetPassword([Bind("EMail")] ForgetModel forgetModel)
         {
-
             ApplicationUser? applicationUser;
             string resetTokan;
 
             if (ModelState.IsValid)
             {
 
-                applicationUser = await _userManager.FindByEmailAsync(forgetModel.EMail);
+                applicationUser =  _userManager.FindByEmailAsync(forgetModel.EMail).Result;
                 if (applicationUser != null)
                 {
 
-                    resetTokan = await _userManager.GeneratePasswordResetTokenAsync(applicationUser);
+                    resetTokan =  _userManager.GeneratePasswordResetTokenAsync(applicationUser).Result;
 
                     //send resetToken to ForgetModel.EMail
                     ViewData["eMail"] = forgetModel.EMail;
@@ -136,9 +139,6 @@ namespace OzSapkaTShirt.Controllers
             return View();
 
         }
-
-
-
 
 
         // GET: Users

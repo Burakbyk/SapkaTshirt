@@ -41,9 +41,9 @@ else
      {
 
 
-            $.post("@Url.Action("Approve","Orders")/" + orderId);
+           @* $.post("@Url.Action("Approve","Orders")/" + orderId,);*@
 
-
+             window.location.href = "@Url.Action("Approve", "Orders")/" + orderId;
      }
 
 
@@ -152,4 +152,5 @@ else
         return statusName;
     }
     }
+   
 }

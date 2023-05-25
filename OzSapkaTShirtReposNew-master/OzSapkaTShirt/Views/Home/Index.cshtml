@@ -6,6 +6,7 @@
     ViewData["Title"] = "Home Page";
 }
 <div class="text-center">Ürünler</div>
+
 @foreach (var item in Model)
 {
     <a class="card" style="width:102px;height:250px;display:inline-block;vertical-align:top" asp-controller="Products" asp-action="Details" asp-route-id="@item.Id">
@@ -22,16 +23,22 @@
                 var basketCount = 0;
                 var i;
 
+
                 for(i=0;i<data.orderProducts.length;i++)
                 {
                     basketCount=basketCount+data.orderProducts[i].quantity;
+                    
+                    
                 }
-                $("#basketCount").html(basketCount);
+                
+                $('#basketCount').html(basketCount);
+               
             }
             function AddToBasket(productId) {
                 $.post("@Url.Action("UpDateBasket","OrderProducts")/" + productId+"?quantity=1",UpDateBasket,"json");
-@*                $("#basketCount").load("@Url.Action("UpDateBasket","OrderProducts")/" + productId+"?quantity=1&addReMove=true");
-*@            }
+          }
+        
+
         </script>
         <input type="button" value="SEPETE EKLE" onclick="AddToBasket(@item.Id.ToString())" />
     }

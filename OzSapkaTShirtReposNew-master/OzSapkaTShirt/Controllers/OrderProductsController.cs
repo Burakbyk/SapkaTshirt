@@ -245,6 +245,7 @@ namespace OzSapkaTShirt.Controllers
             }
             
             order.TotalPrice += product.Price * quantity;
+         
             _context.Update(order);
             _context.SaveChanges();
           

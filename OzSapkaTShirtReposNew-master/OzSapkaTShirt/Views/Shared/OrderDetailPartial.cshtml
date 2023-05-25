@@ -19,7 +19,7 @@
             <th>Ürün Adı</th>
             <th>Ürün Resmi</th>
             <th>Adet</th>
-            <th>Ürün Fiyat</th>
+            <th>Ürün Fiyat</th> 
             <th>Ürün Adet Toplam</th>
             <th></th>
         </tr>
@@ -29,21 +29,29 @@
         {
             <tr>
                 <td>@orderProduct.Product?.Name</td>
-                <td><img class="card-img" src="data:image/png;base64,@(Convert.ToBase64String(orderProduct.Product?.ThumbNail))" style="width:50px;display:block" /></td>
+               
                 <td>
-                    <div class="quantity">
+                    <div class="image" style="position:relative;left:80px;">
+                         <img  class="card-img" src="data:image/png;base64,@(Convert.ToBase64String(orderProduct.Product?.ThumbNail))" style="width:50px;display:block" />
+                    </div>
+                </td>
+                   
+
+                   
+                <td>
+                    <div class="quantity" style="border:1px solid black;position:relative; padding:5px;">
                         @if (orderProduct.Quantity < 2)
                         {
 
-                            <i style="margin:auto; border:1px solid; " class="fa-solid fa-minus" onclick="RemoveOrderProduct(@orderProduct.ProductId,-1)"></i>
+                            <i  class="fa-solid fa-minus" onclick="RemoveOrderProduct(@orderProduct.ProductId,-1)"></i>
                         }
                         else
                         {
 
-                            <i style="margin:auto; border:1px solid; " class="fa-solid fa-minus" onClick="UpDateBasket('@orderProduct.ProductId', -1)"></i>
+                            <i  class="fa-solid fa-minus" onClick="UpDateBasket('@orderProduct.ProductId', -1)"></i>
                         }
                         @orderProduct.Quantity
-                        <i style="margin:auto" class="fa-solid fa-plus" onClick="UpDateBasket('@orderProduct.ProductId', 1)"></i>
+                        <i  class="fa-solid fa-plus" onClick="UpDateBasket('@orderProduct.ProductId', 1)"></i>
                     </div>
                 </td>
                 <td>@orderProduct.Price.ToString("C2")</td>

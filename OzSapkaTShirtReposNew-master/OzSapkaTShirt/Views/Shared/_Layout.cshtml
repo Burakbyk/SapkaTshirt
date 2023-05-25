@@ -41,18 +41,22 @@
                         }
                         else
                         {
-                            <li class="nav-item" style="position:absolute;right:100px">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Orders" asp-action="Details">
-                                    <i class="fa-solid fa-basket-shopping"></i>
 
-                                    <span id="basketCount">@Context.Session.GetInt32("basketCount").ToString()</span>
-                                </a>
-                            </li>
-                            <li class="nav-item" style="position:absolute;right:140px">
+                            <li class="nav-item" style="position:absolute;right:145px">
                                 <a class="nav-link text-dark" asp-area="" asp-controller="Orders" asp-action="Index">
                                     <i class="fa-solid fa-cart-shopping"></i>
                                 </a>
                             </li>
+
+
+                            <li class="nav-item" style="position:absolute;right:100px">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Orders" asp-action="Details">
+                                    <i class="fa-solid fa-basket-shopping"></i>
+
+                                    <span id="basketCount" style="color:forestgreen; font-size:10px; font-weight: bolder;"></span>
+                                </a>
+                            </li>
+                          
                             <li class="nav-item" style="position:absolute;right:50px">
                                 <a class="nav-link text-dark" asp-controller="Users" asp-action="Edit" asp-route-id="@userId">Profil</a>
                             </li>

@@ -3,45 +3,91 @@
 @{
     ViewData["Title"] = "Index";
 }
+<h2>Siparişleriniz</h2>
+<hr />
+<h3>Sipariş Detayları</h3>
 
-<h1>Index</h1>
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.User)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.OrderDate)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.TotalPrice)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.User.Id)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.OrderDate)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.TotalPrice)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
-            </td>
-        </tr>
+
+    <table class="table table-striped">
+        <thead>
+            <tr>           
+               
+                <th>Sipariş Fiyat Toplam</th>
+                <th>Sipariş Tarihi</th>
+                <th>Sipariş Durumu</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var order in Model)
+            {
+                <tr>              
+                <td>@order.TotalPrice</td>
+                <td>@order.OrderDate</td>
+                <td>@GetStatusName(order.Status)</td>              
+                <td><i class="fa-solid fa-trash" onclick="RemoveOrder('@order.Id')"></i></td>
+                <td><a asp-action="Edit" asp-route-id="@order.Id">Sipariş Düzenle</a></td>
+                </tr>
+               
+                    
+
+
+            }
+        </tbody>
+    </table>
+
+    <script>
+
+
+        function RemoveOrder(orderId)
+        {
+
+
+           
+
+
+
+        }
+
+
+
+
+
+
+
+
+
+    </script>
+
+
+
+@functions
+{
+    string GetStatusName(int status)
+    {
+        string statusName = string.Empty;
+        switch (status)
+        {
+            case 0:
+                statusName = "Sepette";
+                break;
+            case 1:
+                statusName = "Sipariş Alındı";
+                break;
+            case 2:
+                statusName = "Hazırlanıyor";
+                break;
+            case 3:
+                statusName = "Kargoya Verildi";
+                break;
+            case 4:
+                statusName = "Tamamlandı";
+                break;
+            default:
+                statusName = "Bilinmeyen Durum";
+                break;
+        }
+        return statusName;
+    }
 }
-    </tbody>
-</table>

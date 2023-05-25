@@ -235,7 +235,7 @@ namespace OzSapkaTShirt.Controllers
                     {
                         _context.Remove(order);
                         _context.SaveChanges();
-                        return PartialView("OrderDetailPartial", order.OrderProducts);
+                        return PartialView("OrderDetailPartial", order);
                     }
                 }
                 else
@@ -248,7 +248,7 @@ namespace OzSapkaTShirt.Controllers
             _context.Update(order);
             _context.SaveChanges();
           
-            return PartialView("OrderDetailPartial", order.OrderProducts);
+            return PartialView("OrderDetailPartial", order);
 
         }
 

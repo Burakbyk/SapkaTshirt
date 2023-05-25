@@ -97,7 +97,7 @@ namespace OzSapkaTShirt.Controllers
                 else
                 {
                     ModelState.AddModelError("Code", "");
-                
+                    
                 }
 
                
@@ -132,6 +132,11 @@ namespace OzSapkaTShirt.Controllers
                     ViewData["eMail"] = forgetModel.EMail;
                     return View("ResetPassword");
 
+                }
+                else
+                {
+                    ModelState.AddModelError("EMail", "Böyle bir email bulunamadı");
+                    
                 }
 
             }
@@ -345,8 +350,13 @@ namespace OzSapkaTShirt.Controllers
                     {
                         return RedirectToAction("Index", "Home");
                     }
+                   
+                        ModelState.AddModelError("", "Kullanıcı ya da şifre hatalı");
+                    
                 }
+              
             }
+         
             HttpContext.Session.SetInt32("basketCount", 0);
             return View(user);
         }

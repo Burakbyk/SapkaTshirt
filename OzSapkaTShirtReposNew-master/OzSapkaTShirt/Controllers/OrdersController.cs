@@ -25,8 +25,17 @@ namespace OzSapkaTShirt.Controllers
         // GET: Orders
         public async Task<IActionResult> Index()
         {
-            var applicationContext = _context.Orders.Include(o => o.User);
-            return View(await applicationContext.ToListAsync());
+            List<Order>? order;
+            string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            order =  _context.Orders.Where(o => o.UserId == userId && o.Status == 1).Include(o=>o.OrderProducts).ThenInclude(op=>op.Product).ToList();
+            
+        
+            if (order==null)
+            {
+                return NotFound();
+            }
+          
+            return View(order);
         }
 
         // GET: Orders/Details/5
@@ -82,7 +91,7 @@ namespace OzSapkaTShirt.Controllers
             order.OrderDate = DateTime.Now;
             _context.Update(order);
             _context.SaveChanges();
-            return View(order);
+            return RedirectToAction("Index","Orders");
         }
 
         // GET: Orders/Edit/5

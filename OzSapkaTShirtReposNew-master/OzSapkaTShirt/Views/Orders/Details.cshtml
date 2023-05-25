@@ -27,43 +27,55 @@ else
 
     <h3>Sipariş Ürünleri</h3>
     <div id="order-detail-section">
-        @await Html.PartialAsync("OrderDetailPartial",Model.OrderProducts)
+        @await Html.PartialAsync("OrderDetailPartial",Model)
     </div>
 
 
     <div id="successMessage" class="alert alert-success" style="display: none;"></div>
     <div class="message-container"></div>
+    <input type="submit" value="Sipariş Oluştur" class="btn btn-primary" onclick="CreateOrder('@Model.Id')"/>
     <script src="https://kit.fontawesome.com/54ee7b90a1.js" crossorigin="anonymous"></script>
     <script>
 
-      
+     function CreateOrder(orderId)
+     {
+
+
+            $.post("@Url.Action("Approve","Orders")/" + orderId);
+
+
+     }
+
+
+        
+
+
+
+
+
 
         function UpDateBasket(productId, quantity) {
-
             if (quantity === 0) {
+
                 if (!confirm("Ürünü sepetten kaldırmak istediğinizden emin misiniz?")) {
                     return;
                 }
-            } else {
+            } 
+            else {
+
                 $.ajax({
                     type: "POST",
                     url: "@Url.Action("UpDateBasket","OrderProducts")/" + productId + "?quantity=" + quantity,
                     success: function (result) {
-
-                        if(result===null)
+                    
+                        if (quantity < 0)
                         {
-                                <h2>Sepetim < /h2>
-                                < hr >
-                                <p>Sepetiniz boş.< /p>
 
-
-                        }
-
-                        if (quantity < 0) {
                             showMessage("Ürün adedi azaltıldı.", "success");
 
                         } 
-                        else {
+                        else
+                        {
 
                             showMessage("Ürün adedi artırıldı.", "success");
                         }

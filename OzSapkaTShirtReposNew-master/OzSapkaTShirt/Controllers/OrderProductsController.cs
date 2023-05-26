@@ -181,7 +181,6 @@ namespace OzSapkaTShirt.Controllers
             Product? product = _context.Products.Find(id);
             string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
-
             order = _context.Orders.Where(o => o.UserId == userId && o.Status == 0).Include(o => o.OrderProducts).FirstOrDefault();
             if (order != null && order.OrderProducts != null)
             {
@@ -229,12 +228,13 @@ namespace OzSapkaTShirt.Controllers
                 orderProduct.Quantity += quantity;
                 if (orderProduct.Quantity == 0)
                 {
-              
+
                     order.OrderProducts.Remove(orderProduct);
                     if (order.OrderProducts.Count == 0)
                     {
                         _context.Remove(order);
                         _context.SaveChanges();
+                        HttpContext.Response.Cookies.Append("totalQuantity", order.OrderProducts.Sum(q => q.Quantity).ToString());
                         return PartialView("OrderDetailPartial", order);
                     }
                 }
@@ -243,19 +243,19 @@ namespace OzSapkaTShirt.Controllers
                     orderProduct.Total += product.Price * quantity;
                 }
             }
-            
+
             order.TotalPrice += product.Price * quantity;
-         
+
             _context.Update(order);
             _context.SaveChanges();
-            
+            HttpContext.Response.Cookies.Append("totalQuantity", order.OrderProducts.Sum(q => q.Quantity).ToString());
             return PartialView("OrderDetailPartial", order);
 
-            
+
         }
 
 
-      
+
 
     }
 }

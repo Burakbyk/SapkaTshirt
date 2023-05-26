@@ -18,17 +18,31 @@
     @if (User.FindFirstValue(ClaimTypes.NameIdentifier) != null)
     {
 
-        <script>    
-            
+        <script>
+
+            window.onload = function () {
+
+                var quantity = readCookie('totalQuantity')
+                if (quantity > 0) {
+                    $('#basketCount').html(quantity);
+                }
+
+            };
 
 
-
+          
 
 
             function AddToBasket(productId) {
 
-          
-                $.post("@Url.Action("UpDateBasket","OrderProducts")/" + productId+"?quantity=1");              
+               
+
+                $.post("@Url.Action("UpDateBasket","OrderProducts")/" + productId+"?quantity=1");
+                var quantity = readCookie('totalQuantity')
+                if (quantity > 0) {
+                    $('#basketCount').html(quantity)
+                }
+
           }
         
 

@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using OzSapkaTShirt.Data;
 using OzSapkaTShirt.Models;
 using System.Diagnostics;
+using System.Security.Claims;
 
 namespace OzSapkaTShirt.Controllers
 {
@@ -19,6 +20,8 @@ namespace OzSapkaTShirt.Controllers
 
         public IActionResult Index(string? id=null)
         {
+                               
+
             return View(_context.Products.ToList());
         }
 
@@ -32,5 +35,11 @@ namespace OzSapkaTShirt.Controllers
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
+
+
+
+       
+
+
     }
 }

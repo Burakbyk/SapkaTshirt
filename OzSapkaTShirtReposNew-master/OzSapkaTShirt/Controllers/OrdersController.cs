@@ -97,17 +97,30 @@ namespace OzSapkaTShirt.Controllers
         // GET: Orders/Edit/5
         public async Task<IActionResult> Edit(long? id)
         {
-            if (id == null || _context.Orders == null)
+            Order? order;
+            OrderProduct? orderProduct;
+            Product? product = _context.Products.Find(id);
+            string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+
+            order = _context.Orders.Where(o => o.UserId == userId && o.Status == 0).Include(o => o.OrderProducts).FirstOrDefault();
+            if (order != null && order.OrderProducts != null)
+            {
+                foreach (var item in order.OrderProducts)
+                {
+                    if (item.Product == null)
+                    {
+                        item.Product = _context.Products.FirstOrDefault(q => q.Id == item.ProductId);
+                    }
+                }
+            }
+            else
             {
                 return NotFound();
             }
 
-            var order = await _context.Orders.FindAsync(id);
-            if (order == null)
-            {
-                return NotFound();
-            }
-            ViewData["UserId"] = new SelectList(_context.Users, "Id", "Id", order.UserId);
+
+
             return View(order);
         }
 
@@ -127,6 +140,7 @@ namespace OzSapkaTShirt.Controllers
             {
                 try
                 {
+                  
                     _context.Update(order);
                     await _context.SaveChangesAsync();
                 }

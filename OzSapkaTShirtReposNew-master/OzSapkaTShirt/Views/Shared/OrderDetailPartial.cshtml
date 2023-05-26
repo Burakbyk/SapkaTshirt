@@ -68,6 +68,14 @@
 </table>
 
 <script>
+
+    window.onload = function () {
+
+        $('#basketCount').html('@orderQuantity.ToString()');
+
+    };
+
+
     $('#orderTotalPrice').html('@orderTotalPrice.ToString("C2")');
     $('#basketCount').html('@orderQuantity.ToString()');
 </script>

@@ -1,6 +1,10 @@
 ﻿@using System.Security.Claims
+@using OzSapkaTShirt2.Helper;
 @{
     string? userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+    int quantity;
+    string quantityString = CookieHelper.GetObject(Context, "totalQuantity");
+    int.TryParse(quantityString, out quantity);
 }
 <!DOCTYPE html>
 <html lang="en">
@@ -51,16 +55,26 @@
 
                             <li class="nav-item" style="position:absolute;right:100px">
                                 <a class="nav-link text-dark" asp-area="" asp-controller="Orders" asp-action="Details">
-                                    <i class="fa-solid fa-basket-shopping">
+                                    <div class="fa-solid fa-basket-shopping"  >
 
-                                        <span id="basketCount" style="color:forestgreen; font-size:15px; font-weight: bolder;"></span>
+                                        @if (quantity > 0)
+                                        {
+                                            <span id="basketCount" style="color:forestgreen; font-size:10px; font-weight: bolder; position:relative; top:-8px;">
 
-                                    </i>
+                                                 @quantity
 
-                                   
+                                            </span>
+                                        }
+                                       
+
+                                     
+
+                                    </div>
+
+
                                 </a>
                             </li>
-                          
+
                             <li class="nav-item" style="position:absolute;right:50px">
                                 <a class="nav-link text-dark" asp-controller="Users" asp-action="Edit" asp-route-id="@userId">Profil</a>
                             </li>
@@ -99,8 +113,17 @@
 </body>
 <script>
 
-
-
+    function readCookie(name) {
+        var nameEQ = name + "=";
+        var ca = document.cookie.split(';');
+        for (var i = 0; i < ca.length; i++) {
+            var c = ca[i];
+            while (c.charAt(0) == ' ') c = c.substring(1, c.length);
+            if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length, c.length);
+        }
+       return null;
+    }
+    
 
 </script>
 </html>

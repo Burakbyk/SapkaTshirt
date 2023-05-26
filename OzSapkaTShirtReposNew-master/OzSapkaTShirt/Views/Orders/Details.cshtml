@@ -33,21 +33,20 @@ else
 
     <div id="successMessage" class="alert alert-success" style="display: none;"></div>
     <div class="message-container"></div>
-    <input type="submit" value="Sipariş Oluştur" class="btn btn-primary" onclick="CreateOrder('@Model.Id')"/>
+    <input type="submit" value="Sipariş Oluştur" class="btn btn-primary" onclick="CreateOrder('@Model.Id')" />
     <script src="https://kit.fontawesome.com/54ee7b90a1.js" crossorigin="anonymous"></script>
     <script>
 
-     function CreateOrder(orderId)
-     {
+        function CreateOrder(orderId) {
 
 
-           @* $.post("@Url.Action("Approve","Orders")/" + orderId,);*@
+        @* $.post("@Url.Action("Approve","Orders")/" + orderId,);*@
 
-             window.location.href = "@Url.Action("Approve", "Orders")/" + orderId;
-     }
+                window.location.href = "@Url.Action("Approve", "Orders")/" + orderId;
+        }
 
 
-        
+
 
 
 
@@ -57,28 +56,27 @@ else
                 if (!confirm("Ürünü sepetten kaldırmak istediğinizden emin misiniz?")) {
                     return;
                 }
-            } 
+            }
             else {
 
                 $.ajax({
                     type: "POST",
                     url: "@Url.Action("UpDateBasket","OrderProducts")/" + productId + "?quantity=" + quantity,
                     success: function (result) {
-                    
-                        var orderProduct = result.orderProducts;
-                        
 
-                        if (quantity < 0)
-                        {
+                        var orderProduct = result.orderProducts;
+
+
+                        if (quantity < 0) {
 
                             showMessage("Ürün adedi azaltıldı.", "success");
 
-                        } 
-                        else
-                        {
+                        }
+                        else {
 
                             showMessage("Ürün adedi artırıldı.", "success");
-                        }         
+                        }
+                       
                         $('#orderTotalPrice').html(result.totalPrice);
                         $('#order-detail-section').html(result);
                     },
@@ -86,11 +84,11 @@ else
                         showMessage("Ürün güncellenirken bir hata oluştu.", "error");
                     }
                 });
-              
+
             }
 
-           
-      
+
+
         }
 
 
@@ -98,9 +96,9 @@ else
             if (confirm("Ürünü sepetten kaldırmak istediğinizden emin misiniz?")) {
                 UpDateBasket(productId, quantity);
 
-               
+
             }
-           
+
         }
 
         function showMessage(message, messageType) {
@@ -151,5 +149,5 @@ else
         return statusName;
     }
     }
-   
+
 }

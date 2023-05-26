@@ -27,7 +27,11 @@
                 <td>@order.OrderDate</td>
                 <td>@GetStatusName(order.Status)</td>              
                 <td><i class="fa-solid fa-trash" onclick="RemoveOrder('@order.Id')"></i></td>
-                <td><a asp-action="Edit" asp-route-id="@order.Id">Sipariş Düzenle</a></td>
+                @if(order.Status<3)
+                {
+                    <td><a asp-action="Edit" asp-route-id="@order.Id">Sipariş Düzenle</a></td>
+                }
+              
                 </tr>
                
                     

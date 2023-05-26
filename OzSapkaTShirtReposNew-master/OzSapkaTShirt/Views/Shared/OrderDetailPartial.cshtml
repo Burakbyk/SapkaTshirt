@@ -6,6 +6,7 @@
 }
 @{
     float orderTotalPrice = 0;
+    int orderQuantity=0;
     if (Model.OrderProducts != null && Model.OrderProducts.Count > 0)
     {
         orderTotalPrice = Model.OrderProducts.Sum(q => q.Quantity * q.Price);
@@ -56,6 +57,7 @@
                 </td>
                 <td>@orderProduct.Price.ToString("C2")</td>
                 @{
+                    orderQuantity += orderProduct.Quantity;
                     var urunToplam = orderProduct.Quantity * orderProduct.Price;
                 }
                 <td>@urunToplam.ToString("C2")</td>
@@ -67,4 +69,5 @@
 
 <script>
     $('#orderTotalPrice').html('@orderTotalPrice.ToString("C2")');
+    $('#basketCount').html('@orderQuantity.ToString()');
 </script>

@@ -51,9 +51,13 @@
 
                             <li class="nav-item" style="position:absolute;right:100px">
                                 <a class="nav-link text-dark" asp-area="" asp-controller="Orders" asp-action="Details">
-                                    <i class="fa-solid fa-basket-shopping"></i>
+                                    <i class="fa-solid fa-basket-shopping">
 
-                                    <span id="basketCount" style="color:forestgreen; font-size:10px; font-weight: bolder;"></span>
+                                        <span id="basketCount" style="color:forestgreen; font-size:15px; font-weight: bolder;"></span>
+
+                                    </i>
+
+                                   
                                 </a>
                             </li>
                           
@@ -93,4 +97,10 @@
     <script src="~/js/site.js" asp-append-version="true"></script>
     @await RenderSectionAsync("Scripts", required: false)
 </body>
+<script>
+
+
+
+
+</script>
 </html>

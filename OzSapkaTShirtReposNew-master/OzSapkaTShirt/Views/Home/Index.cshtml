@@ -17,25 +17,18 @@
     </a>
     @if (User.FindFirstValue(ClaimTypes.NameIdentifier) != null)
     {
-        <script>
-            function UpDateBasket(data)
-            {
-                var basketCount = 0;
-                var i;
+
+        <script>    
+            
 
 
-                for(i=0;i<data.orderProducts.length;i++)
-                {
-                    basketCount=basketCount+data.orderProducts[i].quantity;
-                    
-                    
-                }
-                
-                $('#basketCount').html(basketCount);
-               
-            }
+
+
+
             function AddToBasket(productId) {
-                $.post("@Url.Action("UpDateBasket","OrderProducts")/" + productId+"?quantity=1",UpDateBasket,"json");
+
+          
+                $.post("@Url.Action("UpDateBasket","OrderProducts")/" + productId+"?quantity=1");              
           }
         
 

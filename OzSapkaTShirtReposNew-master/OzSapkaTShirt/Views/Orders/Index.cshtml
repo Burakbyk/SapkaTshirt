@@ -40,20 +40,44 @@
             }
         </tbody>
     </table>
+<div id="successMessage" class="alert alert-success" style="display: none;"></div>
+<div class="message-container"></div>
 
-    <script>
-
-
-        function RemoveOrder(orderId)
-        {
-
-
-           
-
-
-
+<script>
+    function RemoveOrder(orderId) {
+        if (!confirm("Ürünü sepetten kaldırmak istediğinizden emin misiniz?")) {
+            return;
         }
 
+        $.ajax({
+            type: "POST",
+            url: "@Url.Action("RemoveOrder","Orders")" + "/" + orderId, // Hata düzeltildi
+            success: function (result) {
+                showMessage("Sipariş kaldırıldı.", "success");
+                $(".table table-striped tbody").html(result);
+            },
+            error: function (error) {
+                showMessage("Sipariş kaldırılırken bir hata oluştu.", "error");
+            }
+        });
+    }
+
+    function showMessage(message, messageType) {
+        var alertClass = "alert-info";
+        if (messageType === "success") {
+            alertClass = "alert-success";
+        } else if (messageType === "error") {
+            alertClass = "alert-danger";
+        }
+
+        var alertHtml = '<div class="alert ' + alertClass + '">' + message + '</div>';
+        $(".message-container").html(alertHtml).fadeIn(500).fadeOut(500);
+    }
+    function updateCartView(cartData) {
+        // Sepet görüntüsünü güncelle
+        $(".cart-items").html(cartData.itemsCount);
+        $(".cart-total").html(cartData.totalPrice);
+    }
 
 
 
@@ -62,7 +86,8 @@
 
 
 
-    </script>
+
+</script>
 
 
 

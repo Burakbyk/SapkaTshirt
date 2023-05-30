@@ -27,7 +27,7 @@ namespace OzSapkaTShirt.Controllers
         {
             List<Order>? order;
             string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            order =  _context.Orders.Where(o => o.UserId == userId && o.Status == 1).Include(o=>o.OrderProducts).ThenInclude(op=>op.Product).ToList();
+            order =  _context.Orders.Where(o => o.UserId == userId && o.Status > 0).Include(o=>o.OrderProducts).ThenInclude(op=>op.Product).ToList();
             
         
             if (order==null)
@@ -94,6 +94,30 @@ namespace OzSapkaTShirt.Controllers
             return RedirectToAction("Index","Orders");
         }
 
+        public async Task<IActionResult> RemoveOrder(long? id)
+        {
+            Order? order;
+            string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (id == null || _context.Orders == null)
+            {
+                return NotFound();
+            }
+
+            order =  _context.Orders.Where(o=>o.Id==id && o.UserId==userId).Include(o=>o.OrderProducts).FirstOrDefault();
+            if (order == null)
+            {
+                return NotFound();
+            }
+       
+            _context.Remove(order);
+            _context.SaveChanges();
+            return View(order);
+        }
+
+
+
+
+
         // GET: Orders/Edit/5
         public async Task<IActionResult> Edit(long? id)
         {
@@ -103,7 +127,7 @@ namespace OzSapkaTShirt.Controllers
             string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
 
-            order = _context.Orders.Where(o => o.UserId == userId && o.Status == 0).Include(o => o.OrderProducts).FirstOrDefault();
+            order = _context.Orders.Where(o => o.UserId == userId && o.Status > 0).Include(o => o.OrderProducts).FirstOrDefault();
             if (order != null && order.OrderProducts != null)
             {
                 foreach (var item in order.OrderProducts)

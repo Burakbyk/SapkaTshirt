@@ -22,7 +22,7 @@ namespace OzSapkaTShirt.Controllers
             _context = context;
         }
 
-        // GET: Orders
+        // Siparişler (sepet durumu hariç)
         public async Task<IActionResult> Index()
         {
             List<Order>? order;
@@ -38,8 +38,8 @@ namespace OzSapkaTShirt.Controllers
             return View(order);
         }
 
-        // GET: Orders/Details/5
-        // Basket Sepet
+       
+        // Basket Sepet durumunda ki sipariler
         public async Task<IActionResult> Details()
         {
             string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
@@ -53,7 +53,7 @@ namespace OzSapkaTShirt.Controllers
         }
 
       
-
+        //Sepeti siparişe dönüştürne
         public async Task<IActionResult> Approve(long? id)
         {
             if (id == null || _context.Orders == null)
@@ -78,6 +78,11 @@ namespace OzSapkaTShirt.Controllers
             return RedirectToAction("Index","Orders");
         }
 
+
+
+
+
+        //Siparişi sil (Orders ındex içinden)
         public IActionResult RemoveOrder(long? id)
         {
             List<Order>? orderList;
@@ -111,9 +116,7 @@ namespace OzSapkaTShirt.Controllers
 
 
 
-
-
-        // GET: Orders/Edit/5
+        //Detaylı sipariş bilgilerin olduğu Sipariş listesi
         public async Task<IActionResult> OrderProductsList(long? id)
         {
             Order? order;
@@ -139,7 +142,7 @@ namespace OzSapkaTShirt.Controllers
 
        
    
-      
+        //sipariş sil sipariş detay kısmından   
         public IActionResult DeleteOrder(long? id)
         {
            Order? order;

@@ -1,0 +1,73 @@
+﻿@model List<Order>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Sipariş No</th>
+            <th>Sipariş Fiyat Toplam</th>
+            <th>Sipariş Tarihi</th>
+            <th>Sipariş Durumu</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var order in Model)
+        {
+          
+
+
+                <tr>
+                    <td>@order.Id</td>
+                    <td>@order.TotalPrice</td>
+                    <td>@order.OrderDate</td>
+                    <td>@GetStatusName(order.Status)</td>
+
+
+                    @if (order.Status < 3)
+                    {
+                        <td><i class="fa-solid fa-trash" onclick="RemoveOrder('@order.Id')"></i></td>
+                        <td><a asp-action="OrderProductsList" asp-route-id="@order.Id">Sipariş Görüntüle</a></td>
+                    }
+
+                </tr>
+            
+            
+            
+           
+          
+
+
+
+
+        }
+    </tbody>
+</table>
+@functions
+{
+    string GetStatusName(int status)
+    {
+        string statusName = string.Empty;
+        switch (status)
+        {
+            case 0:
+                statusName = "Sepette";
+                break;
+            case 1:
+                statusName = "Sipariş Alındı";
+                break;
+            case 2:
+                statusName = "Hazırlanıyor";
+                break;
+            case 3:
+                statusName = "Kargoya Verildi";
+                break;
+            case 4:
+                statusName = "Tamamlandı";
+                break;
+            default:
+                statusName = "Bilinmeyen Durum";
+                break;
+        }
+        return statusName;
+    }
+}

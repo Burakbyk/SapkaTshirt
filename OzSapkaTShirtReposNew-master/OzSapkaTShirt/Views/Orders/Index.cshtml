@@ -1,45 +1,35 @@
-﻿@model IEnumerable<OzSapkaTShirt.Models.Order>
+﻿@model List<Order>
 
 @{
     ViewData["Title"] = "Index";
 }
 <h2>Siparişleriniz</h2>
 <hr />
-<h3>Sipariş Detayları</h3>
+
+@if(Model==null)
+{
+    
+
+    <p>Siparişiniz bulunmamaktadır.</p>
+
+}
+else
+{
+   
+    <h3>Sipariş Detayları</h3>
+    <div id="order-list-section">@await Html.PartialAsync("OrderListPartial",Model)</div>
+
+}
 
 
 
-    <table class="table table-striped">
-        <thead>
-            <tr>           
-               
-                <th>Sipariş Fiyat Toplam</th>
-                <th>Sipariş Tarihi</th>
-                <th>Sipariş Durumu</th>
-                <th></th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var order in Model)
-            {
-                <tr>              
-                <td>@order.TotalPrice</td>
-                <td>@order.OrderDate</td>
-                <td>@GetStatusName(order.Status)</td>              
-                <td><i class="fa-solid fa-trash" onclick="RemoveOrder('@order.Id')"></i></td>
-                @if(order.Status<3)
-                {
-                    <td><a asp-action="Edit" asp-route-id="@order.Id">Sipariş Düzenle</a></td>
-                }
-              
-                </tr>
-               
-                    
 
 
-            }
-        </tbody>
-    </table>
+
+
+
+
+   
 <div id="successMessage" class="alert alert-success" style="display: none;"></div>
 <div class="message-container"></div>
 
@@ -51,10 +41,10 @@
 
         $.ajax({
             type: "POST",
-            url: "@Url.Action("RemoveOrder","Orders")" + "/" + orderId, // Hata düzeltildi
+            url: "@Url.Action("RemoveOrder","Orders")" + "/" + orderId, 
             success: function (result) {
                 showMessage("Sipariş kaldırıldı.", "success");
-                $(".table table-striped tbody").html(result);
+                $('#order-list-section').html(result);
             },
             error: function (error) {
                 showMessage("Sipariş kaldırılırken bir hata oluştu.", "error");
@@ -91,32 +81,3 @@
 
 
 
-@functions
-{
-    string GetStatusName(int status)
-    {
-        string statusName = string.Empty;
-        switch (status)
-        {
-            case 0:
-                statusName = "Sepette";
-                break;
-            case 1:
-                statusName = "Sipariş Alındı";
-                break;
-            case 2:
-                statusName = "Hazırlanıyor";
-                break;
-            case 3:
-                statusName = "Kargoya Verildi";
-                break;
-            case 4:
-                statusName = "Tamamlandı";
-                break;
-            default:
-                statusName = "Bilinmeyen Durum";
-                break;
-        }
-        return statusName;
-    }
-}

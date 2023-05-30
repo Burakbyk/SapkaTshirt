@@ -1,0 +1,160 @@
+﻿@model OzSapkaTShirt.Models.Order
+
+@{
+    ViewData["Title"] = "Edit";
+}
+@{
+    float orderQuantity = 0;
+}
+<h1>Sipariş Detayları</h1>
+<hr />
+<h4>Sipariş Bilgileri</h4>
+<br />
+
+<div class="row">
+    <div class="col-md-6">
+        <dl class="dl-horizontal">
+            <dt>Sipariş No:</dt>
+            <dd>@Model.Id</dd>
+            <dt>Tarih:</dt>
+            <dd>@Model.OrderDate.ToShortDateString()</dd>
+            <dt>Sipariş Toplam:</dt>
+            <dd>@Model.TotalPrice.ToString("C2")</dd>
+            <dt>Durum:</dt>
+            <dd>@GetStatusName(Model.Status)</dd>
+        </dl>
+    </div>
+
+</div>
+
+<h3>Sipariş Ürünleri</h3>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Ürün Adı</th>
+            <th>Ürün Resmi</th>
+            <th>Adet</th>
+            <th>Ürün Fiyat</th>
+            <th>Ürün Adet Toplam</th>          
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var orderProduct in Model.OrderProducts)
+        {
+            <tr>
+                <td>@orderProduct.Product?.Name</td>
+
+                <td>
+                    <div class="image" style="position:relative;left:100px;">
+                        <img class="card-img" src="data:image/png;base64,@(Convert.ToBase64String(orderProduct.Product?.ThumbNail))" style="width:50px;display:block" />
+                    </div>
+                </td>
+
+
+
+                <td>
+                                         
+                        @orderProduct.Quantity
+                                         
+                </td>
+                <td>@orderProduct.Price.ToString("C2")</td>
+                @{
+                    orderQuantity += orderProduct.Quantity;
+                    var urunToplam = orderProduct.Quantity * orderProduct.Price;
+                }
+                <td>@urunToplam.ToString("C2")</td>
+                
+            </tr>
+        }
+    </tbody>
+</table>
+
+
+
+<br />
+<input type="button" value="Siparişi İptal Et"  class="btn btn-primary" onclick="DeleteOrder('@Model.Id')"/>
+<div>
+    <a asp-action="Index">Siparişlerime Dön</a>
+</div>
+
+
+<script>
+
+    function DeleteOrder(orderId)
+    {
+        $.post("@Url.Action("DeleteOrder","Orders")/" + orderId,);
+       
+
+
+
+    }
+
+
+
+
+
+
+
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+@functions
+{
+    string GetStatusName(int status)
+    {
+        string statusName = string.Empty;
+        switch (status)
+        {
+            case 0:
+                statusName = "Sepette";
+                break;
+            case 1:
+                statusName = "Sipariş Alındı";
+                break;
+            case 2:
+                statusName = "Hazırlanıyor";
+                break;
+            case 3:
+                statusName = "Kargoya Verildi";
+                break;
+            case 4:
+                statusName = "Tamamlandı";
+                break;
+            default:
+                statusName = "Bilinmeyen Durum";
+                break;
+        }
+        return statusName;
+    }
+}

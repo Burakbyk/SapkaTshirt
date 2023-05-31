@@ -125,7 +125,7 @@ namespace OzSapkaTShirt.Controllers
             string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
 
-            order = _context.Orders.Where(o => o.Id == id && o.UserId==userId).Include(o => o.OrderProducts).ThenInclude(op=>op.Product).First();
+            order = _context.Orders.Where(o => o.Id == id && o.UserId==userId && o.Status>0).Include(o => o.OrderProducts).ThenInclude(op=>op.Product).FirstOrDefault();
 
             if (order != null && order.OrderProducts != null)
             {
@@ -155,7 +155,7 @@ namespace OzSapkaTShirt.Controllers
             }
 
 
-        order = _context.Orders.Where(o => o.Id == id && o.UserId == userId).Include(o => o.OrderProducts).FirstOrDefault();
+        order = _context.Orders.Where(o => o.Id == id && o.UserId == userId && o.Status>0).Include(o => o.OrderProducts).FirstOrDefault();
         if(order != null )
          {
                 if (order.Status < 3)
@@ -167,13 +167,13 @@ namespace OzSapkaTShirt.Controllers
                     return RedirectToAction("Index", "Orders");
                 }
 
-                return NotFound();
+                return View(order);
 
          }
        
         
 
-             return NotFound();
+             return View(order);
             
             
            

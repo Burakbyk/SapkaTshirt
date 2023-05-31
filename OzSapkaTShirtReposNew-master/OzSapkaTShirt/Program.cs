@@ -49,6 +49,8 @@ namespace OzSapkaTShirt
             context.Database.Migrate();
 
 
+
+
             app.Run();
         }
     }

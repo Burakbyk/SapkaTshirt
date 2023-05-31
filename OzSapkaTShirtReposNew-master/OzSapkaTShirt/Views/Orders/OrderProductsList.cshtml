@@ -1,11 +1,13 @@
 ﻿@model OzSapkaTShirt.Models.Order
 
 @{
-    ViewData["Title"] = "Edit";
+    ViewData["Title"] = "Sipariş Ürünleri";
 }
 @{
     float orderQuantity = 0;
 }
+    
+
 <h1>Sipariş Detayları</h1>
 <hr />
 <h4>Sipariş Bilgileri</h4>
@@ -108,12 +110,9 @@
 
 
 
-
-
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
 }
-
 
 
 

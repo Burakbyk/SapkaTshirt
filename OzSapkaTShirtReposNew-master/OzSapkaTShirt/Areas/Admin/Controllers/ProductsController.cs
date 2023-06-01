@@ -133,25 +133,42 @@ namespace OzSapkaTShirt.Areas.Admin.Controllers
                 return NotFound();
             }
 
+            MemoryStream target, reSizedTarget;
+            Image reSizedImage, originalImage;
+            EncoderParameter qualityParameter;
+            EncoderParameters encoderParameters;
+            ImageCodecInfo[] allCoDecs;
+            ImageCodecInfo jPEGCodec = null;
+
             if (ModelState.IsValid)
             {
-                try
+                if (product.Image != null)
                 {
-                    _context.Update(product);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!ProductExists(product.Id))
+                    encoderParameters = new EncoderParameters(1);
+                    qualityParameter = new EncoderParameter(Encoder.Quality, 60L);
+                    encoderParameters.Param[0] = qualityParameter;
+                    reSizedTarget = new MemoryStream();
+                    allCoDecs = ImageCodecInfo.GetImageEncoders();
+                    foreach (ImageCodecInfo coDec in allCoDecs)
                     {
-                        return NotFound();
+                        if (coDec.FormatDescription == "JPEG")
+                        {
+                            jPEGCodec = coDec;
+                        }
                     }
-                    else
-                    {
-                        throw;
-                    }
+                    target = new MemoryStream();
+                    product.Image.CopyTo(target); //Dosyayı stream'a kopyala
+                    originalImage = Image.FromStream(target);
+                    reSizedImage = ReSize(originalImage, 300, 400);
+                    reSizedImage.Save(reSizedTarget, jPEGCodec, encoderParameters);
+                    product.DBImage = reSizedTarget.ToArray();
+                    reSizedImage = ReSize(originalImage, 150, 200);
+                    reSizedImage.Save(reSizedTarget, jPEGCodec, encoderParameters);
+                    product.ThumbNail = reSizedTarget.ToArray();
                 }
-                //bu ürünün bulunduğu sepetleri güncelle
+                _context.Update(product);
+
+                await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
             return View(product);

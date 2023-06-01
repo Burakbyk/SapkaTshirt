@@ -11,7 +11,11 @@
 {
     <a class="card" style="width:102px;height:250px;display:inline-block;vertical-align:top" asp-controller="Products" asp-action="Details" asp-route-id="@item.Id">
         <span class="card-title">@item.Name.Trim()</span>
-        <img class="card-img" src="data:image/png;base64,@Convert.ToBase64String(item.DBImage)" style="width:100px;display:block">
+        @if(item.DBImage!=null)
+        {
+            <img class="card-img" src="data:image/png;base64,@Convert.ToBase64String(item.DBImage)" style="width:100px;display:block">
+        }
+       
         <span class="card-text">@item.Description.Trim()</span>
         <span class="card-text">@item.Price.ToString("F2")</span>
     </a>
